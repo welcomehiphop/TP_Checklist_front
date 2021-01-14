@@ -1,0 +1,1 @@
+<LineChart  style="height: 200px;" :chartData="datacollection_LineChart" />
