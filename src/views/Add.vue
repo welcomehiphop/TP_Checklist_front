@@ -2,7 +2,8 @@
   <div>
     <h1>Improve</h1>
     <h2>Date and Time : {{ timestamp }}</h2>
-    <form>
+  
+     <form>
       <div v-for="(list, i) in data_set" :key="i">
         <v-text-field v-model="list.idx" :key="i + 1" label="ID" readonly />
         <v-text-field
@@ -40,7 +41,9 @@ import axios from "axios";
 export default {
   async mounted() {
     let result = await api.getAtpDataByID(this.$route.params.id);
+    this.result = result 
     this.data_set = result;
+
   },
   components: {
     ImageUpload,
@@ -48,6 +51,7 @@ export default {
 
   data() {
     return {
+      result:[],
       selectedFile: null,
       timestamp: "",
       form: {

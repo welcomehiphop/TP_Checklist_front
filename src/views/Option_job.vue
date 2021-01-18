@@ -289,7 +289,7 @@ export default {
       // { text: "Improve_Emp", value: "after_empno", sortable: false },
       // { text: "Improve_Action", value: "after_comment", sortable: false },
       { text: "Improve_Date", value: "after_reg_date", sortable: false },
-      
+      { text: "Reg_Name", value: "after_empno", sortable: false },
       { text: "Status", value: "check_status", sortable: false },
     ],
     data_set: [],

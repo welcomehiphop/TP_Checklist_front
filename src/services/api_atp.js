@@ -1,5 +1,6 @@
 import httpClient from "@/services/httpClient";
 import { apt } from "@/services/constants";
+import { test } from "@/services/constants";
 import router from "@/router";
 
 
@@ -33,11 +34,11 @@ export const getAtpDataByEmp = async(empno, status) => {
         result = await httpClient.get(apt.get_atp_data_list + "?emp=" + `${empno}` + "&status=" + `${status}`)
     }
     return result.data
+
 }
 
 
-
-// export const getAtpDataByWeek = async(week) => {
-//     let result = await httpClient.get(apt.get_atp_data_list + "?week=" + `${week}`);
-//     return result.data;
-// }
+export const post_test = async data => {
+    let result = await httpClient.post(apt.get_atp_data_list(data));
+    return result.data
+}
