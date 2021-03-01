@@ -22,6 +22,7 @@
       </div>
       <v-text-field v-model="form.empNo" label="Emp No"></v-text-field>
       <v-text-field v-model="form.action" label="Action"></v-text-field>
+
       <input type="file" @change="onFileSelected" />
       <!-- <button @click="onUpload">Test Upload</button> -->
       <v-col class="text-right">
@@ -41,7 +42,7 @@ import axios from "axios";
 export default {
   async mounted() {
     let result = await api.getAtpDataByID(this.$route.params.id);
-    this.result = result 
+
     this.data_set = result;
 
   },
@@ -87,9 +88,7 @@ export default {
     async submit(event) {
       let self = this;
       event.preventDefault();
-      console.log(this.form.empNo);
-      console.log(this.form.action);
-      console.log(this.selectedFile);
+  
       if (this.form.empNo == "") {
         console.log(1);
         alert("Please input all field.");
@@ -127,13 +126,7 @@ export default {
             this.$router.push({ name: "option_job" });
           }
         });
-
       }
-
-      
-      // .catch(function(){
-      //   this.$router.push({ name: 'option_job' })
-      // });
     },
   },
 };

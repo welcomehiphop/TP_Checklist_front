@@ -42,7 +42,7 @@
         </v-subheader>
       </v-col>
       <v-col cols="1">
-        <v-select
+      <v-select
           @change="onChange()"
           v-model="selectWeek"
           :items="number"
@@ -85,6 +85,7 @@
           >
         </div>
       </v-col>
+      
       <v-col cols="1">
         <div class="text-right">
           <v-btn elevation="3" outlined single-line @click="onClickReset()"
@@ -116,7 +117,8 @@
         :headers="headers"
         :items="data_set"
         item-key="name"
-        class="elevation-2"
+        class="elevation-1"
+        :calculate-widths="true"
         :footer-props="{
           'items-per-page-options': [10, 20, 30, 40],
         }"
@@ -143,15 +145,15 @@
               <img
                 :src="item.picture_before"
                 alt="Image not found"
-                width="100"
-                height="100"
+                width="80"
+                height="80"
               />
             </td>
 
             <td>{{ item.before_comment }}</td>
             <td>
               {{
-                  item.before_reg_date.substring(8, 10) +
+                item.before_reg_date.substring(8, 10) +
                   item.before_reg_date.substring(4, 5) +
                   item.before_reg_date.substring(5, 7) +
                   item.before_reg_date.substring(4, 5) +
@@ -163,8 +165,8 @@
               <img
                 :src="item.picture_after"
                 alt="Image not found"
-                width="100"
-                height="100"
+                width="80"
+                height="80"
               />
             </td>
             <!-- <td>{{ item.after_empno }}</td> -->
@@ -181,6 +183,16 @@
             </td>
             <td>{{ item.before_empno }}</td>
             <td>{{ item.check_status }}</td>
+            <td>
+              <a href="javascript:;"
+                ><img
+                  @click="onDelete(item.idx)"
+                  src="../assets/remove.png"
+                  height="30px"
+                  width="30px"
+                  alt="Image not found"
+              /></a>
+            </td>
           </tr>
         </template>
       </v-data-table>
@@ -190,13 +202,13 @@
 </template>
 
 <script>
-import moment from "moment";
 import XLSX from "xlsx";
 import api from "@/services/api";
 export default {
   async mounted() {
     let result = await api.getAtpData();
     this.data_set = result;
+    
     for (let i = 0; i < this.data_set.length; i++) {
       if (this.data_set[i].check_status == "Pending") {
         this.pending++;
@@ -208,9 +220,9 @@ export default {
   },
 
   data: () => ({
-    all: "",
-    pending: "",
-    finish: "",
+    all: 0,
+    pending: 0,
+    finish: 0,
     picked: "",
     search: "",
     selectWeek: { week: "Select Week", value: "undefined" },
@@ -282,12 +294,9 @@ export default {
       { text: "MachineName", value: "machine_name", sortable: false },
       { text: "Content", value: "content_name", sortable: false },
       { text: "Reg_Img", value: "picture_before", sortable: false },
-     
       { text: "Reg_Action", value: "before_comment", sortable: false },
       { text: "Reg_Date", value: "before_reg_date", sortable: false },
       { text: "Improve_Img", value: "picture_after", sortable: false },
-      // { text: "Improve_Emp", value: "after_empno", sortable: false },
-      // { text: "Improve_Action", value: "after_comment", sortable: false },
       { text: "Improve_Date", value: "after_reg_date", sortable: false },
       { text: "Reg_Name", value: "after_empno", sortable: false },
       { text: "Status", value: "check_status", sortable: false },
@@ -296,6 +305,30 @@ export default {
   }),
 
   methods: {
+    async onDelete(id) {
+      if (confirm("Do you really want to delete?")) {
+        await api
+          .deleteData(id)
+          .then((resp) => {
+            alert(resp);
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      }
+
+      this.data_set = await api.getAtpData();
+      this.all = this.data_set.length;
+      this.pending = 0;
+      this.finish = 0;
+      for (let i = 0; i < this.data_set.length; i++) {
+        if (this.data_set[i].check_status == "Pending") {
+          this.pending++;
+        } else {
+          this.finish++;
+        }
+      }
+    },
     onExport() {
       let wb = XLSX.utils.book_new();
       XLSX.utils.sheet_add_json(wb, this.data_set, {
@@ -313,7 +346,6 @@ export default {
       // console.log(this.selectStatus.value)
     },
     async onClickSearch() {
-      console.log(this.picked);
       let result;
       if (this.picked == 2) {
         result = await api.getAtpDataByWeek(
@@ -367,6 +399,9 @@ h4 {
   margin-bottom: 10px;
 }
 td {
-  font-size: 14px !important;
+  font-size: small !important;
+}
+.v-card {
+  overflow: hidden;
 }
 </style>

@@ -14,8 +14,10 @@ export const tnsm = {
 };
 
 export const apt = {
-    get_atp_data_list: 'atp_get_list'
+    get_atp_data_list: 'atp_get_list',
+    delete_atp_data_list: 'atp_delete_list'
 };
+
 
 
 export const test = {

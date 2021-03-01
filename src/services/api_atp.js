@@ -1,7 +1,7 @@
 import httpClient from "@/services/httpClient";
 import { apt } from "@/services/constants";
-import { test } from "@/services/constants";
 import router from "@/router";
+import { delete_apt } from "./constants";
 
 
 export const getAtpData = async() => {
@@ -35,6 +35,11 @@ export const getAtpDataByEmp = async(empno, status) => {
     }
     return result.data
 
+}
+
+export const deleteData = async(id) => {
+    let result = await httpClient.delete(apt.delete_atp_data_list + "/" + `${id}`)
+    return (result.data)
 }
 
 
